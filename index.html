@@ -104,6 +104,76 @@
       <p>Your file is <span id="smallFileSize"></span> - no compression needed!</p>
       <button id="resetSmallBtn" class="reset-btn">Upload Another File</button>
     </div>
+
+    <details class="explainer">
+      <summary>How compression works</summary>
+      <div class="explainer-content">
+        <div class="explainer-section">
+          <h3>Basic Compression</h3>
+          <p>Keeps every Nth point uniformly along the route. Simple and fast, but may lose detail in complex sections.</p>
+          <div class="explainer-graphic">
+            <svg viewBox="0 0 300 100" class="compression-diagram">
+              <!-- Original path -->
+              <path d="M10,80 Q50,80 70,60 Q90,40 110,50 Q130,60 150,30 Q170,10 190,20 Q210,30 230,70 Q250,90 290,50"
+                    fill="none" stroke="#3f3f46" stroke-width="2" stroke-dasharray="4,4"/>
+              <!-- All original points -->
+              <g class="original-points" fill="#3f3f46">
+                <circle cx="10" cy="80" r="3"/><circle cx="30" cy="80" r="3"/><circle cx="50" cy="75" r="3"/>
+                <circle cx="70" cy="60" r="3"/><circle cx="90" cy="45" r="3"/><circle cx="110" cy="50" r="3"/>
+                <circle cx="130" cy="55" r="3"/><circle cx="150" cy="30" r="3"/><circle cx="170" cy="15" r="3"/>
+                <circle cx="190" cy="20" r="3"/><circle cx="210" cy="35" r="3"/><circle cx="230" cy="70" r="3"/>
+                <circle cx="250" cy="80" r="3"/><circle cx="270" cy="65" r="3"/><circle cx="290" cy="50" r="3"/>
+              </g>
+              <!-- Kept points (every 3rd) -->
+              <g class="kept-points" fill="#60a5fa">
+                <circle cx="10" cy="80" r="5"/><circle cx="70" cy="60" r="5"/><circle cx="130" cy="55" r="5"/>
+                <circle cx="190" cy="20" r="5"/><circle cx="250" cy="80" r="5"/><circle cx="290" cy="50" r="5"/>
+              </g>
+              <!-- Simplified path -->
+              <path d="M10,80 L70,60 L130,55 L190,20 L250,80 L290,50"
+                    fill="none" stroke="#60a5fa" stroke-width="2"/>
+            </svg>
+            <div class="diagram-legend">
+              <span class="legend-item"><span class="dot original"></span> Original points</span>
+              <span class="legend-item"><span class="dot kept"></span> Kept points (uniform)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="explainer-section">
+          <h3>Smart Compression</h3>
+          <p>Uses the Douglas-Peucker algorithm to keep more points where the route curves, and fewer on straight sections.</p>
+          <div class="explainer-graphic">
+            <svg viewBox="0 0 300 100" class="compression-diagram">
+              <!-- Original path -->
+              <path d="M10,80 Q50,80 70,60 Q90,40 110,50 Q130,60 150,30 Q170,10 190,20 Q210,30 230,70 Q250,90 290,50"
+                    fill="none" stroke="#3f3f46" stroke-width="2" stroke-dasharray="4,4"/>
+              <!-- All original points -->
+              <g class="original-points" fill="#3f3f46">
+                <circle cx="10" cy="80" r="3"/><circle cx="30" cy="80" r="3"/><circle cx="50" cy="75" r="3"/>
+                <circle cx="70" cy="60" r="3"/><circle cx="90" cy="45" r="3"/><circle cx="110" cy="50" r="3"/>
+                <circle cx="130" cy="55" r="3"/><circle cx="150" cy="30" r="3"/><circle cx="170" cy="15" r="3"/>
+                <circle cx="190" cy="20" r="3"/><circle cx="210" cy="35" r="3"/><circle cx="230" cy="70" r="3"/>
+                <circle cx="250" cy="80" r="3"/><circle cx="270" cy="65" r="3"/><circle cx="290" cy="50" r="3"/>
+              </g>
+              <!-- Kept points (smart - more at curves) -->
+              <g class="kept-points" fill="#a78bfa">
+                <circle cx="10" cy="80" r="5"/><circle cx="70" cy="60" r="5"/><circle cx="90" cy="45" r="5"/>
+                <circle cx="110" cy="50" r="5"/><circle cx="150" cy="30" r="5"/><circle cx="170" cy="15" r="5"/>
+                <circle cx="190" cy="20" r="5"/><circle cx="230" cy="70" r="5"/><circle cx="290" cy="50" r="5"/>
+              </g>
+              <!-- Simplified path -->
+              <path d="M10,80 L70,60 L90,45 L110,50 L150,30 L170,15 L190,20 L230,70 L290,50"
+                    fill="none" stroke="#a78bfa" stroke-width="2"/>
+            </svg>
+            <div class="diagram-legend">
+              <span class="legend-item"><span class="dot original"></span> Original points</span>
+              <span class="legend-item"><span class="dot smart"></span> Kept points (smart)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </details>
   </div>
 
   <script src="gpx-compressor.js"></script>
