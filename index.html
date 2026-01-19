@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPX Compressor</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>GPX Compressor</h1>
+    <p class="subtitle">Reduce GPX file size to under 5MB while preserving route accuracy</p>
+
+    <div class="upload-area" id="uploadArea">
+      <input type="file" id="fileInput" accept=".gpx" hidden>
+      <div class="upload-content">
+        <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        <p>Drop your GPX file here or <span class="browse-link">browse</span></p>
+      </div>
+    </div>
+
+    <div class="file-info" id="fileInfo" hidden>
+      <div class="info-row">
+        <span class="label">File:</span>
+        <span id="fileName"></span>
+      </div>
+      <div class="info-row">
+        <span class="label">Original size:</span>
+        <span id="originalSize"></span>
+      </div>
+      <div class="info-row">
+        <span class="label">Track points:</span>
+        <span id="pointCount"></span>
+      </div>
+    </div>
+
+    <div class="compression-options" id="compressionOptions" hidden>
+      <h2>Compression Method</h2>
+      <div class="option-group">
+        <label class="option">
+          <input type="radio" name="method" value="basic" checked>
+          <div class="option-content">
+            <strong>Basic Compression</strong>
+            <p>Uniformly reduces points to achieve target size. Fast and predictable.</p>
+          </div>
+        </label>
+        <label class="option">
+          <input type="radio" name="method" value="smart">
+          <div class="option-content">
+            <strong>Smart Compression</strong>
+            <p>Preserves detail in curves and corners, removes more points on straight sections.</p>
+          </div>
+        </label>
+      </div>
+
+      <button id="compressBtn" class="compress-btn">Compress to 5MB</button>
+    </div>
+
+    <div class="progress-section" id="progressSection" hidden>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <p class="progress-text" id="progressText">Processing...</p>
+    </div>
+
+    <div class="result-section" id="resultSection" hidden>
+      <h2>Compression Complete</h2>
+      <div class="result-stats">
+        <div class="stat">
+          <span class="stat-value" id="newSize"></span>
+          <span class="stat-label">New Size</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value" id="reduction"></span>
+          <span class="stat-label">Size Reduction</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value" id="newPointCount"></span>
+          <span class="stat-label">Points Remaining</span>
+        </div>
+      </div>
+      <button id="downloadBtn" class="download-btn">Download Compressed GPX</button>
+      <button id="resetBtn" class="reset-btn">Compress Another File</button>
+    </div>
+
+    <div class="already-small" id="alreadySmall" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+        <polyline points="22 4 12 14.01 9 11.01"/>
+      </svg>
+      <h2>File Already Under 5MB</h2>
+      <p>Your file is <span id="smallFileSize"></span> - no compression needed!</p>
+      <button id="resetSmallBtn" class="reset-btn">Upload Another File</button>
+    </div>
+  </div>
+
+  <script src="gpx-compressor.js"></script>
+</body>
+</html>
