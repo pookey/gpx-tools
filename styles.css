@@ -446,6 +446,33 @@ h1 {
   background: #a78bfa;
 }
 
+/* Footer */
+.site-footer {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #3f3f46;
+  text-align: center;
+}
+
+.site-footer a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #a1a1aa;
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color 0.2s ease;
+}
+
+.site-footer a:hover {
+  color: #e4e4e7;
+}
+
+.site-footer svg {
+  width: 20px;
+  height: 20px;
+}
+
 @media (max-width: 480px) {
   body {
     padding: 1rem;
