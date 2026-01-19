@@ -9,7 +9,7 @@
 <body>
   <div class="container">
     <h1>GPX Compressor</h1>
-    <p class="subtitle">Reduce GPX file size to under 5MB while preserving route accuracy</p>
+    <p class="subtitle">Reduce GPX file size while preserving route accuracy</p>
 
     <div class="upload-area" id="uploadArea">
       <input type="file" id="fileInput" accept=".gpx" hidden>
@@ -57,7 +57,15 @@
         </label>
       </div>
 
-      <button id="compressBtn" class="compress-btn">Compress to 5MB</button>
+      <div class="target-size-section">
+        <h2>Target Size</h2>
+        <div class="slider-container">
+          <input type="range" id="targetSizeSlider" min="1" max="10" value="5" step="0.5">
+          <span class="slider-value" id="targetSizeValue">5 MB</span>
+        </div>
+      </div>
+
+      <button id="compressBtn" class="compress-btn">Compress to <span id="compressBtnSize">5</span>MB</button>
     </div>
 
     <div class="progress-section" id="progressSection" hidden>
@@ -92,7 +100,7 @@
         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
         <polyline points="22 4 12 14.01 9 11.01"/>
       </svg>
-      <h2>File Already Under 5MB</h2>
+      <h2>File Already Under Target Size</h2>
       <p>Your file is <span id="smallFileSize"></span> - no compression needed!</p>
       <button id="resetSmallBtn" class="reset-btn">Upload Another File</button>
     </div>

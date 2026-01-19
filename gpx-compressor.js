@@ -1,4 +1,4 @@
-const TARGET_SIZE = 5 * 1024 * 1024; // 5MB in bytes
+const DEFAULT_TARGET_MB = 5;
 
 // DOM Elements
 const uploadArea = document.getElementById('uploadArea');
@@ -9,6 +9,9 @@ const originalSize = document.getElementById('originalSize');
 const pointCount = document.getElementById('pointCount');
 const compressionOptions = document.getElementById('compressionOptions');
 const compressBtn = document.getElementById('compressBtn');
+const compressBtnSize = document.getElementById('compressBtnSize');
+const targetSizeSlider = document.getElementById('targetSizeSlider');
+const targetSizeValue = document.getElementById('targetSizeValue');
 const progressSection = document.getElementById('progressSection');
 const progressFill = document.getElementById('progressFill');
 const progressText = document.getElementById('progressText');
@@ -21,6 +24,20 @@ const resetBtn = document.getElementById('resetBtn');
 const alreadySmall = document.getElementById('alreadySmall');
 const smallFileSize = document.getElementById('smallFileSize');
 const resetSmallBtn = document.getElementById('resetSmallBtn');
+
+// Get target size in bytes from slider
+function getTargetSize() {
+  return parseFloat(targetSizeSlider.value) * 1024 * 1024;
+}
+
+// Update slider display
+function updateSliderDisplay() {
+  const value = targetSizeSlider.value;
+  targetSizeValue.textContent = value + ' MB';
+  compressBtnSize.textContent = value;
+}
+
+targetSizeSlider.addEventListener('input', updateSliderDisplay);
 
 // State
 let currentFile = null;
@@ -65,7 +82,7 @@ async function handleFile(file) {
   currentFile = file;
 
   // Check if already under target size
-  if (file.size <= TARGET_SIZE) {
+  if (file.size <= getTargetSize()) {
     uploadArea.hidden = true;
     alreadySmall.hidden = false;
     smallFileSize.textContent = formatSize(file.size);
@@ -120,7 +137,8 @@ async function compressBasic() {
   const avgPointSize = (currentFile.size - headerFooterSize) / originalCount;
 
   // Calculate target point count
-  const targetPointBytes = TARGET_SIZE - headerFooterSize - 1024; // Leave 1KB buffer
+  const targetSize = getTargetSize();
+  const targetPointBytes = targetSize - headerFooterSize - 1024; // Leave 1KB buffer
   let targetPointCount = Math.floor(targetPointBytes / avgPointSize);
 
   updateProgress(20, 'Calculating optimal reduction...');
@@ -147,7 +165,8 @@ async function compressSmart() {
   const originalString = serializer.serializeToString(gpxDoc);
   const headerFooterSize = estimateHeaderFooterSize(originalString, originalCount);
   const avgPointSize = (currentFile.size - headerFooterSize) / originalCount;
-  const targetPointCount = Math.floor((TARGET_SIZE - headerFooterSize - 1024) / avgPointSize);
+  const targetSize = getTargetSize();
+  const targetPointCount = Math.floor((targetSize - headerFooterSize - 1024) / avgPointSize);
 
   updateProgress(20, 'Applying Douglas-Peucker algorithm...');
   await new Promise(r => setTimeout(r, 50));
@@ -163,6 +182,7 @@ async function compressSmart() {
 
 async function binarySearchCompression(originalPoints, targetCount, method, trksegs = null) {
   const serializer = new XMLSerializer();
+  const targetSize = getTargetSize();
   let bestResult = null;
 
   if (method === 'basic') {
@@ -194,7 +214,7 @@ async function binarySearchCompression(originalPoints, targetCount, method, trks
         `Testing ${formatNumber(kept)} points (${formatSize(testSize)})...`);
       await new Promise(r => setTimeout(r, 10));
 
-      if (testSize <= TARGET_SIZE) {
+      if (testSize <= targetSize) {
         bestResult = { gpxString: testString, keptCount: kept, size: testSize };
         low = mid + 1; // Try to keep more points
       } else {
@@ -245,7 +265,7 @@ async function binarySearchCompression(originalPoints, targetCount, method, trks
         `Testing epsilon ${epsilon.toFixed(6)} (${formatNumber(totalKept)} points, ${formatSize(testSize)})...`);
       await new Promise(r => setTimeout(r, 10));
 
-      if (testSize <= TARGET_SIZE) {
+      if (testSize <= targetSize) {
         bestResult = { gpxString: testString, keptCount: totalKept, size: testSize };
         high = epsilon; // Try smaller epsilon to keep more points
       } else {
@@ -253,7 +273,7 @@ async function binarySearchCompression(originalPoints, targetCount, method, trks
       }
 
       // Good enough if within 95% of target
-      if (bestResult && bestResult.size > TARGET_SIZE * 0.95) {
+      if (bestResult && bestResult.size > targetSize * 0.95) {
         break;
       }
     }
