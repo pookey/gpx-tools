@@ -24,6 +24,7 @@ const resetBtn = document.getElementById('resetBtn');
 const alreadySmall = document.getElementById('alreadySmall');
 const smallFileSize = document.getElementById('smallFileSize');
 const resetSmallBtn = document.getElementById('resetSmallBtn');
+const targetSizeSection = document.getElementById('targetSizeSection');
 
 // Get target size in bytes from slider
 function getTargetSize() {
@@ -84,6 +85,8 @@ async function handleFile(file) {
   // Check if already under target size
   if (file.size <= getTargetSize()) {
     uploadArea.hidden = true;
+    targetSizeSection.hidden = true;
+    compressionOptions.hidden = true;
     alreadySmall.hidden = false;
     smallFileSize.textContent = formatSize(file.size);
     return;
@@ -103,13 +106,14 @@ async function handleFile(file) {
 
   uploadArea.hidden = true;
   fileInfo.hidden = false;
-  compressionOptions.hidden = false;
+  compressBtn.disabled = false;
 }
 
 // Compression
 compressBtn.addEventListener('click', async () => {
   const method = document.querySelector('input[name="method"]:checked').value;
 
+  targetSizeSection.hidden = true;
   compressionOptions.hidden = true;
   progressSection.hidden = false;
 
@@ -388,11 +392,13 @@ function reset() {
 
   uploadArea.hidden = false;
   fileInfo.hidden = true;
-  compressionOptions.hidden = true;
+  targetSizeSection.hidden = false;
+  compressionOptions.hidden = false;
   progressSection.hidden = true;
   resultSection.hidden = true;
   alreadySmall.hidden = true;
   progressFill.style.width = '0%';
+  compressBtn.disabled = true;
 }
 
 resetBtn.addEventListener('click', reset);
